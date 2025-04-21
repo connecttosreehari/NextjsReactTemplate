@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useGetUserList } from "@api/users/hooks";
+import { useGetProductList } from "@api/products/hooks";
 import { Box, Field, Input, Stack, Table } from "@chakra-ui/react";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import _ from "lodash";
@@ -8,14 +8,15 @@ type Filters = {
   search?: string;
 };
 
-type User = {
-  fullName: string;
-  email: string;
+type Product = {
+  name: string;
+  description: string;
+  price: number;
 };
 
-const UserTable = () => {
+const ProductsTable = () => {
   const [filters, setFilters] = useState<Filters>();
-  const users = useGetUserList({
+  const products = useGetProductList({
     search: filters?.search,
   });
 
@@ -25,21 +26,25 @@ const UserTable = () => {
     []
   );
 
-  const columnHelper = createColumnHelper<User>();
+  const columnHelper = createColumnHelper<Product>();
 
   const columns = [
-    columnHelper.accessor("fullName", {
+    columnHelper.accessor("name", {
       cell: (info) => info.getValue(),
-      header: "Full Name",
+      header: "Product",
     }),
-    columnHelper.accessor("email", {
+    columnHelper.accessor("description", {
       cell: (info) => info.getValue(),
-      header: "Email",
+      header: "Description",
+    }),
+    columnHelper.accessor("price", {
+      cell: (info) => info.getValue(),
+      header: "Price",
     }),
   ];
 
   const table = useReactTable({
-    data: users.data || [],
+    data: products.data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -78,4 +83,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default ProductsTable;
